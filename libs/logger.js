@@ -1,93 +1,39 @@
-/**
- * Cryptonote Node.JS Pool
- * https://github.com/dvandal/cryptonote-nodejs-pool
- *
- * Log system
- **/
+const {createLogger, format, transports} = require('winston');
+const {splat, combine, timestamp, label, printf} = format;
 
-// Load required modules
-let fs = require('fs');
-let util = require('util');
-let dateFormat = require('dateformat');
-let clc = require('cli-color');
-
-/**
- * Initialize log system
- **/
-
-// Set CLI colors
-let severityMap = {
-	'info': clc.blue,
-	'warn': clc.yellow,
-	'error': clc.red
-};
-
-// Set severity levels
-let severityLevels = ['info', 'warn', 'error'];
-
-// Set log directory
-let logDir = config.logging.files.directory;
-
-// Create log directory if not exists
-if (!fs.existsSync(logDir)) {
-	try {
-		fs.mkdirSync(logDir);
-	} catch (e) {
-		throw e;
-	}
+const config = require('../config.json');
+if(!config)  {
+    throw  new Error("Config file config.json does not exist")
 }
 
-/**
- * Write log entries to file at specified flush interval
- **/
-let pendingWrites = {};
+const logLevel = config.logger ? config.logger.level || 'debug' : config.logLevel || 'debug';
+require('winston-daily-rotate-file');
 
-setInterval(function () {
-	for (let fileName in pendingWrites) {
-		let data = pendingWrites[fileName];
-		fs.appendFile(fileName, data, function (err) {
-			if (err) {
-				console.log("Error writing log data to disk: %s", err);
-				callback(null, "Error writing data to disk");
-			}
-		});
-		delete pendingWrites[fileName];
-	}
-}, config.logging.files.flushInterval * 1000);
-
-/**
- * Add new log entry
- **/
-global.log = function (severity, system, text, data) {
-
-	let logConsole = severityLevels.indexOf(severity) >= severityLevels.indexOf(config.logging.console.level);
-	let logFiles = severityLevels.indexOf(severity) >= severityLevels.indexOf(config.logging.files.level);
-
-	if (!logConsole && !logFiles) return;
-
-	let time = dateFormat(new Date(), 'yyyy-mm-dd HH:MM:ss');
-	let formattedMessage = text;
-
-	if (data) {
-		data.unshift(text);
-		formattedMessage = util.format.apply(null, data);
-	}
-
-	if (logConsole) {
-		if (config.logging.console.colors)
-			if (system === 'daemon' || system === 'childDaemon') {
-				console.log(severityMap[severity](time) + clc.green.bold(' [' + system + '] ' + formattedMessage));
-			}
-		else {
-			console.log(severityMap[severity](time) + clc.white.bold(' [' + system + '] ') + formattedMessage);
-		} else
-			console.log(time + ' [' + system + '] ' + formattedMessage);
-	}
-
-
-	if (logFiles) {
-		let fileName = logDir + '/' + system + '_' + severity + '.log';
-		let fileLine = time + ' ' + formattedMessage + '\n';
-		pendingWrites[fileName] = (pendingWrites[fileName] || '') + fileLine;
-	}
+module.exports = {
+    getLogger: function (loggerName, coin) {
+        let transportz = [new transports.Console()];
+        if (config.logger && config.logger.file) {
+            transportz.push(
+                new transports.DailyRotateFile({
+                    filename: config.logger.file,
+                    datePattern: 'YYYY-MM-DD',
+                    prepend: false,
+                    localTime: false,
+                    level: logLevel
+                })
+            );
+        }
+        return createLogger({
+            format: combine(
+                splat(),
+                label({label: {loggerName: loggerName, coin: coin}}),
+                timestamp(),
+                printf(info => {
+                    return `[${info.timestamp}] [${info.level}] [${info.label.coin}] [${info.label.loggerName}] : ${info.message}`;
+                })
+            ),
+            level: logLevel,
+            transports: transportz,
+        });
+    }
 };
