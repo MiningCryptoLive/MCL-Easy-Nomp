@@ -1,6 +1,6 @@
 {
     
-    "poolname": "My Cool Pool",
+    "poolname": "neoxa.solopool.us",
     
     "devmode": false,
     "devmodePayMinimim": 0.25,
@@ -19,9 +19,9 @@
     
     "discordtwitterfacebook": "Join our #mining channel on Discord: <a href='https://discord.gg/vzcbVNW' target='_blank'>https://discord.gg/vzcbVNW</a>",
     
-    "pagetitle": "My Cool Pool - 0% Fees Promo - Run by professionals",
-    "pageauthor": "My Name Is...",
-    "pagedesc": "A reliable, low fee, easy to use mining pool for cryptocurrency! No matter your experience with mining cryptocurrency, we make it easy! Get started mining today!",
+    "pagetitle": "neoxa.solopool.us - 0.5% Fees Promo ",
+    "pageauthor": "neoxa.solopool.us",
+    "pagedesc": "A reliable, low fee, easy to use mining pool for Neoxay! No matter your experience with mining cryptocurrency, we make it easy! Get started mining today!",
     "pagekeywds": "GPU,CPU,Hash,Hashrate,Cryptocurrency,Crypto,Mining,Pool,Bitcoin,Raven,Ravencoin,Wavi,Wavicoin,Dixicoin,Dixi,QBic,QBicCoin,Easy,Simple,How,To",
 
     "btcdonations": "",
@@ -64,21 +64,21 @@
 
     "website": {
         "enabled": true,
-        "sslenabled": true,
-        "sslforced": true,
+        "sslenabled": false,
+        "sslforced": false,
         "host": "0.0.0.0",
-        "port": 8080,
+        "port": 8282,
         "sslport": 443,
         "sslkey": "/home/pool/EasyX-CommunityeasyNOMP-master/certs/privkey.pem",
         "sslcert": "/home/pool/EasyX-CommunityeasyNOMP-master/certs/fullchain.pem",
-        "stratumHost": "192.168.1.37",
+        "stratumHost": "neoxa.solopool.us",
         "stats": {
             "updateInterval": 5,
             "historicalRetention": 43200,
             "hashrateWindow": 600
         },
         "adminCenter": {
-            "enabled": false,
+            "enabled": true,
             "password": "1234"
         }
     },
