@@ -20,7 +20,7 @@
         "minConf": 30,
         "coinPrecision": 8,
         "daemon": {
-            "host": "192.168.1.37",
+            "host": "neoxa.solopool.us",
             "port": 9050,
             "user": "user1",
             "password": "pass1"
@@ -41,7 +41,7 @@
         },
         "10032": {
             "varDiff": {
-                "minDiff": 0.04,
+                "minDiff": 2.0,
                 "maxDiff": 16,
     	        "targetTime": 10,
     	        "retargetTime": 60,
@@ -63,7 +63,7 @@
 
     "daemons": [
         {
-            "host": "192.168.1.37",
+            "host": "neoxa.solopool.us",
             "port": 9050,
             "user": "user1",
             "password": "pass1"
